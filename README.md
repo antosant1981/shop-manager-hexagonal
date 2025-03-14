@@ -1,8 +1,7 @@
 # Shop manager
 
 ### Reference Documentation
-
-Application that exposes rest APIs to perform the basic CRUD on generic products in a shop.
+Simple application, based on hexagonal architecture, that exposes rest endpoints to perform the basic CRUD on generic products in a shop.
 In order for it to run, we need to start a postgres database instance.
 
 ## Running your postgres server 
