@@ -25,7 +25,7 @@ public class Product {
     private OffsetDateTime updatedAt = OffsetDateTime.now();
 
     public ProductData toSnapshot() {
-        return  new ProductData(id,
+        return new ProductData(id,
                 serialNumber,
                 barCode,
                 name,
@@ -37,31 +37,44 @@ public class Product {
     }
 
     public static Product create(SerialNumber serialNumber,
-                           BarCode barCode,
-                           ProductName name,
-                           String description,
-                           Price price,
-                           Status status) {
-        return Product.builder()
-                .id(Identifier.nextVal())
+                                 BarCode barCode,
+                                 ProductName name,
+                                 String description,
+                                 Price price,
+                                 Status status,
+                                 EventPublisher eventPublisher) {
+        var product = Product.builder()
                 .serialNumber(serialNumber)
                 .barCode(barCode)
                 .name(name)
                 .description(description)
                 .price(price)
                 .status(status).build();
+
+        eventPublisher.publish(new ProductCreatedEvent(product.id.asString(),
+                product.serialNumber.serialNumber(),
+                product.barCode.barCode(),
+                product.name.productName()));
+
+        return product;
     }
 
     public void update(BarCode barCode,
                        ProductName name,
                        String description,
                        Price price,
-                       Status status) {
+                       Status status,
+                       EventPublisher eventPublisher) {
         this.barCode = barCode;
         this.name = name;
         this.description = description;
         this.price = price;
         this.status = status;
+
+        eventPublisher.publish(new ProductUpdatedEvent(this.id.asString(),
+                this.serialNumber.serialNumber(),
+                this.barCode.barCode(),
+                this.name.productName()));
     }
 
     public static Product fromSnapshot(ProductData snapshot) {

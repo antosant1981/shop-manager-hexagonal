@@ -5,6 +5,7 @@ import org.shop.manager.hexagonal.application.api.CreateProduct;
 import org.shop.manager.hexagonal.application.api.DeleteProduct;
 import org.shop.manager.hexagonal.application.api.QueryData;
 import org.shop.manager.hexagonal.application.api.UpdateProduct;
+import org.shop.manager.hexagonal.vocabulary.Event;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,10 @@ public class ProductTestContext {
 
     public InMemoryProductRepository productRepository() {
         return applicationContext.productRepository;
+    }
+
+    public Optional<Event> eventPublished() {
+        return applicationContext.eventPublisher.getEvent();
     }
 
     public List<QueryData> findAllProducts() {

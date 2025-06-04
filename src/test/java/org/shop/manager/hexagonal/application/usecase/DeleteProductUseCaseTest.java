@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.shop.manager.hexagonal.application.api.DeleteProduct;
 import org.shop.manager.hexagonal.application.context.ProductTestContext;
 import org.shop.manager.hexagonal.domain.ProductMother;
+import org.shop.manager.hexagonal.vocabulary.ProductDeletedEvent;
 import org.shop.manager.hexagonal.vocabulary.SerialNumber;
 
 import java.util.UUID;
@@ -24,6 +25,9 @@ class DeleteProductUseCaseTest {
         var feedback = productTestContext.deleteProduct(new DeleteProduct.Command(anExistingProductSerialNumber));
 
         assertThat(feedback.isSuccess()).isTrue();
+        var eventPublished = productTestContext.eventPublished();
+        assertThat(eventPublished).isPresent();
+        assertThat(eventPublished.get()).isExactlyInstanceOf(ProductDeletedEvent.class);
     }
 
     @Test
@@ -33,5 +37,7 @@ class DeleteProductUseCaseTest {
         var feedback = productTestContext.deleteProduct(new DeleteProduct.Command(unexistingSerialNumber));
 
         assertThat(feedback.isNotFound()).isTrue();
+        var eventPublished = productTestContext.eventPublished();
+        assertThat(eventPublished).isNotPresent();
     }
 }

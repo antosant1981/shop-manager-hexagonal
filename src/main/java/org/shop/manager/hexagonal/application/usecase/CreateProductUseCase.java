@@ -1,6 +1,7 @@
 package org.shop.manager.hexagonal.application.usecase;
 
 import org.shop.manager.hexagonal.application.api.CreateProduct;
+import org.shop.manager.hexagonal.domain.EventPublisher;
 import org.shop.manager.hexagonal.domain.Product;
 import org.shop.manager.hexagonal.domain.ProductRepository;
 import org.shop.manager.hexagonal.domain.TransactionService;
@@ -10,10 +11,14 @@ public class CreateProductUseCase implements CreateProduct {
 
     private final TransactionService transactionService;
     private final ProductRepository productRepository;
+    private final EventPublisher eventPublisher;
 
-    public CreateProductUseCase(TransactionService transactionService, ProductRepository productRepository) {
+    public CreateProductUseCase(TransactionService transactionService,
+                                ProductRepository productRepository,
+                                EventPublisher eventPublisher) {
         this.transactionService = transactionService;
         this.productRepository = productRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -56,6 +61,7 @@ public class CreateProductUseCase implements CreateProduct {
                 productName,
                 description,
                 price,
-                status);
+                status,
+                eventPublisher);
     }
 }

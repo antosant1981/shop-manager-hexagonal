@@ -8,6 +8,7 @@ import org.shop.manager.hexagonal.application.query.FindProductQuery;
 import org.shop.manager.hexagonal.application.usecase.CreateProductUseCase;
 import org.shop.manager.hexagonal.application.usecase.DeleteProductUseCase;
 import org.shop.manager.hexagonal.application.usecase.UpdateProductUseCase;
+import org.shop.manager.hexagonal.domain.EventPublisher;
 import org.shop.manager.hexagonal.domain.ProductRepository;
 import org.shop.manager.hexagonal.domain.TransactionService;
 import org.springframework.context.annotation.Bean;
@@ -17,13 +18,17 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfig {
 
     @Bean
-    public CreateProduct createProduct(TransactionService transactionService, ProductRepository productRepository) {
-        return new CreateProductUseCase(transactionService, productRepository);
+    public CreateProduct createProduct(TransactionService transactionService,
+                                       ProductRepository productRepository,
+                                       EventPublisher eventPublisher) {
+        return new CreateProductUseCase(transactionService, productRepository, eventPublisher);
     }
 
     @Bean
-    public UpdateProduct updateProduct(TransactionService transactionService, ProductRepository productRepository) {
-        return new UpdateProductUseCase(transactionService, productRepository);
+    public UpdateProduct updateProduct(TransactionService transactionService,
+                                       ProductRepository productRepository,
+                                       EventPublisher eventPublisher) {
+        return new UpdateProductUseCase(transactionService, productRepository, eventPublisher);
     }
 
     @Bean
@@ -32,7 +37,7 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public DeleteProduct deleteProduct(ProductRepository productRepository) {
-        return new DeleteProductUseCase(productRepository);
+    public DeleteProduct deleteProduct(ProductRepository productRepository, EventPublisher eventPublisher) {
+        return new DeleteProductUseCase(productRepository, eventPublisher);
     }
 }

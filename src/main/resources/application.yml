@@ -5,3 +5,11 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: admin
     password: admin
+kafka:
+  bootstrap-servers: localhost:9092
+  consumer:
+    group-id: kafka_consumer_group_shop-manager
+    auto-offset-reset: earliest
+  producer:
+    outbox:
+      topic: products

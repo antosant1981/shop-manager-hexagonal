@@ -34,6 +34,9 @@ class UpdateProductUseCaseTest {
                 Status.IN_STOCK));
 
         assertThat(feedback.isSuccessAfterUpdate()).isTrue();
+        var eventPublished = productTestContext.eventPublished();
+        assertThat(eventPublished).isPresent();
+        assertThat(eventPublished.get()).isExactlyInstanceOf(ProductUpdatedEvent.class);
     }
 
     @Test
@@ -53,5 +56,8 @@ class UpdateProductUseCaseTest {
                 Status.IN_STOCK));
 
         assertThat(feedback.isSuccessAfterCreation()).isTrue();
+        var eventPublished = productTestContext.eventPublished();
+        assertThat(eventPublished).isPresent();
+        assertThat(eventPublished.get()).isExactlyInstanceOf(ProductCreatedEvent.class);
     }
 }

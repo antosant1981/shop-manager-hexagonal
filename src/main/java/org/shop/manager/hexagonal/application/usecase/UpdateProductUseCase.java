@@ -1,6 +1,7 @@
 package org.shop.manager.hexagonal.application.usecase;
 
 import org.shop.manager.hexagonal.application.api.UpdateProduct;
+import org.shop.manager.hexagonal.domain.EventPublisher;
 import org.shop.manager.hexagonal.domain.Product;
 import org.shop.manager.hexagonal.domain.ProductRepository;
 import org.shop.manager.hexagonal.domain.TransactionService;
@@ -10,10 +11,14 @@ public class UpdateProductUseCase implements UpdateProduct {
 
     private final TransactionService transactionService;
     private final ProductRepository productRepository;
+    private final EventPublisher eventPublisher;
 
-    public UpdateProductUseCase(TransactionService transactionService, ProductRepository productRepository) {
+    public UpdateProductUseCase(TransactionService transactionService,
+                                ProductRepository productRepository,
+                                EventPublisher eventPublisher) {
         this.transactionService = transactionService;
         this.productRepository = productRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -34,13 +39,13 @@ public class UpdateProductUseCase implements UpdateProduct {
                     presenter.successAfterUpdate(product);
                 }, () -> {
                     var product = createSaveAndGetProduct(command.serialNumber(),
-                                command.barcode(),
-                                command.name(),
-                                command.description(),
-                                command.price(),
-                                command.status());
+                            command.barcode(),
+                            command.name(),
+                            command.description(),
+                            command.price(),
+                            command.status());
                     presenter.successAfterCreation(product);
-                        });
+                });
     }
 
     private void updateAndSaveProduct(Product product,
@@ -49,7 +54,7 @@ public class UpdateProductUseCase implements UpdateProduct {
                                       String description,
                                       Price price,
                                       Status status) {
-        product.update(barCode, productName, description, price, status);
+        product.update(barCode, productName, description, price, status, eventPublisher);
         saveProduct(product);
     }
 
@@ -75,7 +80,8 @@ public class UpdateProductUseCase implements UpdateProduct {
                 productName,
                 description,
                 price,
-                status);
+                status,
+                eventPublisher);
     }
 
     private void saveProduct(Product product) {

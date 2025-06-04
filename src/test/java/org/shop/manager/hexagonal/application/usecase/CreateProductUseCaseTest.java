@@ -24,7 +24,11 @@ class CreateProductUseCaseTest {
                 new Price(32.70),
                 Status.AVAILABLE));
 
+
         assertThat(feedback.isSuccess()).isTrue();
+        var eventPublished = productTestContext.eventPublished();
+        assertThat(eventPublished).isPresent();
+        assertThat(eventPublished.get()).isExactlyInstanceOf(ProductCreatedEvent.class);
     }
 
     @Test
@@ -43,5 +47,7 @@ class CreateProductUseCaseTest {
                 Status.AVAILABLE));
 
         assertThat(feedback.isConflict()).isTrue();
+        var eventPublished = productTestContext.eventPublished();
+        assertThat(eventPublished).isEmpty();
     }
 }
